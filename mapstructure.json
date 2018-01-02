@@ -1,0 +1,77 @@
+{
+  "PIE": {
+    "Anatolian": {
+      "Luwian": {
+        "Lycian": {}
+      },
+      "hittite": {},
+      "carian": {},
+    },
+    "Hellenic": {
+      "mycenaean": {
+        "attic": {
+          "classical Greek": {},
+          "koline gree": {
+            "greek": {}
+          }
+        },
+        "ionic": {
+          "epic greek": {}
+        }
+      }
+    },
+    "Indo-Iranian": {
+      "Indo-Aryan": {
+        "sanskrit": {}
+      }
+    },
+    "Italic": {
+      "latino faliscan": {
+        "faliscan": {},
+        "latin": {
+          "classical latin": {},
+          "vulgar latin": {
+            "romance": {
+              "sardinian": {},
+            }
+          },
+        }
+      },
+      "sabellic": {},
+
+    },
+    "Celtic": {},
+    "proto-germanic": {
+      "Germanic": {
+        "Old-Norse": {
+          "Old east norse": {
+            "danish": {},
+            "swedish": {},
+          }
+        },
+        "Old High German": {
+          "yiddish": {}
+        },
+        "Lower Franconian": {
+          "old dutch": {},
+          "middle dutch": {},
+          "dutch": {},
+          "flemish": {},
+        },
+        "Old Saxon": {},
+        "Anglo-Frisian": {
+          "Old-frisian": {
+            "north frisian": {},
+            "West frisian": {},
+          "old-english": {},
+          "middle enlgish": {},
+          "english": {},
+          "scots": {},
+          "yola": {}
+        },
+      },
+    },
+    "Balto-Slavic": {},
+    "Albanian": {}
+  }
+}
