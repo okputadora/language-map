@@ -106,7 +106,6 @@ router.get("/:word", function(req, res, next) {
             // ... find the one with text
             if (element.children.length > 0){
               // <p></p> containing text
-              // initialize  json etymologyd
 
               // track iterations so we can know when to initialize a new word etymology
               var counter = 0;
@@ -121,7 +120,7 @@ router.get("/:word", function(req, res, next) {
                   // console.log(content.data);
                   source = content.data;
                   // find definition
-                  if (element.children[i+1].attribs.class != 'foreign'){
+                  if (element.children[i+2].attribs.class != 'foreign'){
                     definition = element.children[i+1].data;
                     if (/"/.test(definition)){
                       definition = definition.match(/"(.*?)"/)[1];
