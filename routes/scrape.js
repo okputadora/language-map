@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router();
+var router = express.Router();super
 var superagent = require('superagent');
 var cheerio = require('cheerio');
 
@@ -30,28 +30,30 @@ router.get("/:word", function(req, res, next) {
     var origins = {};
     originWord = undefined;
     element.children.forEach(function(content, q){
+      console.log(content.data);
       if(content.data){
-       // console.log("CONTENT:" +content.data);
-       // parse function
-         // parse word
-         //parse root language
+       // parse def
          definition = getDefinition(content.data)
+         // if this is the first runthrough
          if (q==0){
+           // the definition will be for the word that we searched for
            entry.definition = definition;
          }
+         // else the definition will be for the previous source
          else{
            origins[source] = {"word": originWord, "definition": definition};
          }
+         // we look for the source in the current text after assigning the definition
+         // to the previous source
          source = findSources(content.data);
          //parse root word
          //parse date
          // console.log("DATE: " + getDate(content.data))
          //parse definition
          // console.log('DEFINITION: ' +getDefinition(content.data))
-
          console.log(definition);
-
       }
+      // if we have a source to match the <span class=foreign>
       else if(source){
         originWord = content.children[0].data;
       }
@@ -87,8 +89,8 @@ router.get("/:word", function(req, res, next) {
     eraIndicators = ["mid", "late", "early"];
     // if first sentence starts with a date
     dateIndicators.forEach(function(i){
-      if (text.includes(i)){
-        date = text.substring(0, text.indexOf(" "));
+      if (text.includes("c. " + i)){
+        date = text.substring(text.indexOf("c"), text.indexOf(" "));
         if (/"/.test(text)){
           originalMeaning = text.match(/"(.*?)"/);
           etymology["original-meaning"] = originalMeaning;
@@ -109,9 +111,6 @@ router.get("/:word", function(req, res, next) {
         return date;
       }
     })
-    // if first sentence starts with a definition
-    originalMeaning = text.substring(0, text.indexOf("."))
-    etymology["original-meaning"] = originalMeaning;
   }
 
   var url = 'https://www.etymonline.com/word/' + word;
@@ -139,75 +138,23 @@ router.get("/:word", function(req, res, next) {
             "word": word,
             "pos": pos,
           }
-          // console.log(entry);
+          // because most elements dont have class names we need to find the text
+          // by searching the children...
           var text = element.children[0].children[1].children[0];
           text.children.forEach(function(element, e){
+            // if this paragraph has text
             if (element.children.length > 0){
               // element = text
               parseText(element);
             }
           })
-          console.log(entry);
           entryName = 'entry' + i;
           etymology[title] = entry;
-          console.log(etymology);
         }
       })
       res.json(etymology);
     })
   })
 
-
-  //
-  //         // <object></object>
-  //         var definitionObj = element.children[0];
-  //         //  for each of the <p></p> tags...
-  //         definitionObj.children.forEach(function(element, x){
-  //           // ... find the one with text
-  //           if (element.children.length > 0){
-  //             // <p></p> containing text
-  //
-  //             // track iterations so we can know when to initialize a new word etymology
-  //             var counter = 0;
-  //             element.children.forEach(function(content, q){
-  //               if(content.data){
-  //                 console.log("CONTENT:" +content.data);
-  //                 // parse function
-  //                   // parse word
-  //
-  //                   //parse root language
-  //                   console.log("SOURCE: "  + findSources(content.data));
-  //                   //parse root word
-  //                   //parse date
-  //                   console.log("DATE: " + getDate(content.data))
-  //                   //parse definition
-  //                   console.log('DEFINITION: ' +getDefinition(content.data))
-  //                   definition = getDefinition(content.data)
-  //                   if (q==0){
-  //                     entry = {
-  //                       "word": word,
-  //                       "POS": "",
-  //                       "date": "",
-  //                       "originalMeaning": definition,
-  //                       "origins":{}
-  //                   }
-  //                     console.log("WORD: " + word);
-  //                     etymology.word = word;
-  //                     etymology.originalMeaning = definition;
-  //                   }
-  //               }
-  //               else{console.log('WORD: ' +content.children[0].data)}
-  //             })
-  //           }
-  //         })
-  //       }
-  //       etymology[i] = entry;
-  //     })
-  //
-  //     // return object of word origins
-  //     // res.redirect('../map/' + word +'/' + JSON.stringify(etymology));
-  //     res.json(etymology);
-  //   })
-  // })
 
 module.exports = router;
