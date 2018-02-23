@@ -1,183 +1,102 @@
 const express = require('express');
 const router = express.Router();
-const superagent = require('superagent');
-const cheerio = require('cheerio');
-const words = require('an-array-of-english-words')
-const funWords = words.filter(w => !!w.match(/^abacus/i))
-// var funWords = ["honey", "bone", "gfhlkjsdfg", "break"]
+var Scraper = require('../controllers/scrape')
 
-var etymology = {};
-var source = '';
-var definition = '';
-
-var sources = ['PIE', 'middle english', 'old english', 'modern english',
-'english', 'modern french','old french', 'middle french', 'anglo-french', 'french',
-'old low frankish', 'spanish', 'italian', 'old norse', 'scandanavian', 'swedish','old saxon',
-'old frisian', 'west frisian', 'middle dutch', 'dutch', 'proto-germanic', 'protogermanic',
-'west germanic', 'old high german', 'germanic', 'german','sanskrit', 'welsh','gothic',
-'latin', 'vulgar latin', 'greek', 'arabic', 'hebrew', 'etruscan', 'czech', 'slavic', 'russian', 'gallo-roman',
-'old church slavonic', 'PIE root', 'chinese', 'japanese', 'hittite', 'lithuanian', 'malay',
-'bantu', 'swahili', 'portuguese', 'afrikaans', 'semetic', 'phoenician', 'phoenician root'
-];
-
-function getPOS(text){
-  index = text.indexOf(" ");
-  pos = text.substring(index + 1);
-  return pos;
-}
-function stripPunc(text){
-  strippedText = text.replace(/[.\/#!$%\^&\*;:{}=\-_`~()]/g,"")
-             .replace(/\s{2,}/g," ")
-             .trim();
-  return strippedText;
-}
-function findSources(text, callback){
-  text = text.toUpperCase();
-  for (i in sources){
-    fromText = text.search(sources[i].toUpperCase());
-    if (fromText > -1){
-      callback(sources[i].toUpperCase());
+// important that languages contained in the names of other languages come after
+// i.e. english comes after old and middle english
+const languages = ['pie', 'middle english', 'old english', 'modern english',
+  'english', 'modern french','old french', 'middle french', 'anglo-french', 'french',
+  'old low frankish', 'spanish', 'italian', 'old norse', 'scandanavian', 'swedish','old saxon',
+  'old frisian', 'west frisian', 'middle dutch', 'dutch', 'proto-germanic', 'protogermanic',
+  'west germanic', 'old high german', 'germanic', 'german','sanskrit', 'welsh','gothic',
+  'latin', 'vulgar latin', 'greek', 'arabic', 'hebrew', 'etruscan', 'czech', 'slavic', 'russian', 'gallo-roman',
+  'old church slavonic', 'pie root', 'chinese', 'japanese', 'hittite', 'lithuanian', 'malay',
+  'bantu', 'swahili', 'portuguese', 'gaulish', 'old irish','afrikaans', 'semetic', 'phoenician', 'phoenician root'
+  ]
+function findOrigins(text){
+  var origins = []
+  // I don't like this nested for loop thing here but forEach wasn't cutting it
+  // for the first one because I want to increment by 2 and I need to be able to
+  // break out of the second one
+  for (var i = 0; i < text.length; i += 2){
+    for (var x = 0; x < languages.length; x++){
+      // if this bit of text contains a language keyword and 'from' or its the first text bit (and
+      // therefore we know its 'from')
+      if (text[i].toLowerCase().indexOf(languages[x]) >= 0 && (text[i].toLowerCase().indexOf("from") > 0 || i == 0)){
+        // add the data to origins
+        origins.push({"language": languages[x], "word": text[i+1]})
+        break;
+      }
     }
   }
-
-}
-function getDefinition(text, callback){
-  if (/"/.test(text)){
-    // looking for sentence in quotes
-    def = text.match(/"(.*?)"/g);
-    callback(def);
-  }
-}
-function findCousins(text){}
-function getDate(text, callback){
-  // Get date
-  dateIndicators = ["1", "2", "3", "4",
-                    "5", "6", "7", "8", "9"];
-  eraIndicators = ["mid", "late", "early"];
-  // if first sentence starts with a date
-  dateIndicators.forEach(function(i){
-    if (text.includes("c. " + i)){
-      console.log('text includes c.')
-      date = text.substring(text.indexOf("c"), text.indexOf(","));
-      console.log("DATE: " + date)
-      if (/"/.test(text)){
-        OGmeaning = text.match(/"(.*?)"/);
-        callback([date, OGmeaning]);
-      }
-      else{
-        callback([date]);
-      }
-      return
-    }
-  })
-  // if first sentence starts with an era
-  eraIndicators.forEach(function(i){
-    if (text.substring(0, text.indexOf(" ")).includes(i)){
-      date = text.substring(0, text.indexOf(","));
-      if (/"/.test(text)){
-        OGmeaning = text.match(/"(.*?)"/)[1];
-        callback([date, OGmeaning]);
-      }
-      else{
-        callback([date, OGmeaning]);
-      }
-      return
-    }
-  })
+  return origins;
 }
 
-function getEtymology(words, callback){
-  var entry = {};
-  if (words.length <= 0){
-    callback(entry);
-    return;
-  }
-  word = words[0];
-  // after we grab the word remove it so this list will eventually be length
-  // = 0 and the recursion will end
-  words.shift();
-  var url = 'https://www.etymonline.com/word/' + word;
-  superagent
-    .get(url)
-    // consider doing the scraping outside of this function, after we return
-    // the complete text
-    .end(function(err, response){
-      if (err){
-        getEtymology(words, callback)
-        return
+// much room for improvement here to break things down
+// into smaller reusable functions
+function findCousins(text){
+  var cousins = []
+  for (var i = 0; i < text.length; i += 2){
+    // keep adding until we find the end of the source also
+    if (lookingForClosing){
+      // if we've found the closing
+      if (text[i].toLowerCase().indexOf(')') >= 0){
+        break;
       }
-      // scrape 'section' tags
-      $ = cheerio.load(response.text);
-      $('div').each(function(i, element){
-        var className = element.attribs.class;
-        if (className == 'word--C9UPa'){
-          // console.log("class found");
-          var title = element.children[0].children[0].children[0].data;
-          pos = getPOS(title);
-            entry = {
-            "word": word,
-            "pos": pos,
-          }
-          // because most elements dont have class names we need to find the text
-          // by searching the children...
-          var text = element.children[0].children[1].children[0];
-          var textArray = []
-          text.children.forEach(function(element, e){
-            // if this paragraph has text
-            if (element.children.length > 0){
-              // element = text
-              element.children.forEach(function(sentence, e){
-                if (sentence.data){
-                  textArray.push(sentence.data)
-                }
-                else if (sentence.children[0]){ textArray.push(sentence.children[0].data)}
-              })
-            }
-            entry["text"] = textArray
-          })
-          etymology[title] = entry;
-
+      var langs = []
+      languages.forEach(function(elem){
+        if (text[i].toLowerCase().indexOf(elem) >= 0){
+          langs.push(elem);
         }
       })
-      getEtymology(words, callback)
-    })
-    return;
-}
+      console.log("additional langs: "+langs)
+      langs.forEach(function(elem){
+        cousins.push({"root": root, "language": elem, "word": word})
+      })
 
+    }
+    if (text[i].toLowerCase().indexOf('source also of') >= 0){
+      var root = text[i-1]
+      var langs = []
+      languages.forEach(function(elem){
+        if (text[i].toLowerCase().indexOf(elem) >= 0){
+          langs.push(elem)
+        }
+      })
+      console.log(langs)
+      var word = text[i+1]
+      var lookingForClosing = true;
+      langs.forEach(function(elem){
+        cousins.push({"root": root, "language": elem, "word": word})
+      })
+    }
+  }
+  return cousins
+}
+function parseEtymology(text, callback){
+  // returns array of origin objects
+  var origins = findOrigins(text)
+  var cousins = findCousins(text)
+  callback([origins, cousins])
+}
 router.get("/:word", function(req, res, next){
-  function parseText(){
-    for (var word in etymology){
-      text = etymology[word].text
-      origins = []
-      text.forEach(function(element, e){
-        if (e == 0){
-          getDate(element, function(date){
-            etymology[word]["date"] = date[0];
-            etymology[word]["original meaning"] = date[1];
-          });
-        }
-        // look origin language key words
-        findSources(element, function(source){
-          if (source.toUpperCase() != 'ENGLISH'){
-            origin = {
-              source: source,
-              word: text[e+1]
-            }
-            origins.push(origin)
-          }
-          if (e > 0){
-            getDefinition(element, function(definition){
-              origin.definition = definition;
-            })
-          }
-        })
+  var word = req.params.word
+  Scraper.get(word)
+  .then(function(result){
+    parseEtymology(result[0].text, function(parsedEtymology){
+      res.json({
+        confirmation: 'success',
+        origins: parsedEtymology[0],
+        cousins: parsedEtymology[1]
       })
-      etymology[word].origins = origins
-    }
-    res.json(etymology)
-  }
-  getEtymology(funWords, parseText);
+    })
+  })
+  .catch(function(err){
+    res.json({
+      confirmation: 'fail',
+      message: err
+    })
+  })
 })
-
 
 module.exports = router;

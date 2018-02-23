@@ -1,6 +1,21 @@
+<script
+  src="http://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous">
+</script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src='/javascripts/googleChart.js'></script>
-<h1>wordmap: {{ testword }}</h1>
+
+<div class="hidden-data" style="display: none">
+  <div id='word'>{{word}}</div>
+  <div id='origins'>
+    {{#etymology}}
+     <div class='source'>{{source}}</div>
+     <div class='source-word'>{{word}}</div>
+    {{/etymology}}
+  </div>
+</div>
+
 <div class='wordmap' id='wordmap'>
-  {{wordmap}}
+
 </div>
