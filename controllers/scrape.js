@@ -2,6 +2,7 @@ const superagent = require('superagent')
 const cheerio = require('cheerio');
 var Promise = require('bluebird');
 const words = require('an-array-of-english-words')
+const stringSimilarity = require('string-similarity')
 var  funWords = words.filter(w => !!w.match(/^abacus/i))
 // var funWords = ["honey", "bone", "gfhlkjsdfg", "break"]
 module.exports = {
@@ -28,6 +29,7 @@ module.exports = {
             var entry = {}
             entry["word"] = word
             entry["pos"] = getPOS(title)
+            console.log(entry["pos"])
             // because most elements dont have class names we need to find the text
             // by searching the children...
             var text = element.children[0].children[1].children[0];
@@ -52,11 +54,28 @@ module.exports = {
             if (textArray[0] != undefined){
               entry["text"] = textArray
               etymology.push(entry)
-              resolve(etymology)
               return
             }
           }
         })
+        var relatedWords = []
+        $("ul").each(function(i, element){
+          if (element.attribs.class == "related__container--22iKI"){
+            element.children.forEach(function(elem){
+              elem.children.forEach(function(el){
+                // if it is dissimlar enough
+                var relatedWord = el.children[0].data
+                var similarity = stringSimilarity.compareTwoStrings(relatedWord, word)
+                if (similarity < .6){
+                  console.log("similarity between "+word+" and "+relatedWord+ " = "+similarity)
+                  relatedWords.push(relatedWord)
+                }
+              })
+            })
+          }
+        })
+        etymology["relatedEntries"] = relatedWords
+        resolve(etymology)
       })
     })
     function getPOS(text){
@@ -64,6 +83,5 @@ module.exports = {
       pos = text.substring(index + 1);
       return pos;
     }
-
   }
 }

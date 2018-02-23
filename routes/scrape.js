@@ -3,15 +3,15 @@ const router = express.Router();
 var Scraper = require('../controllers/scrape')
 
 // important that languages contained in the names of other languages come after
-// i.e. english comes after old and middle english
-const languages = ['pie', 'middle english', 'old english', 'modern english',
-  'english', 'modern french','old french', 'middle french', 'anglo-french', 'french',
+// i.e.french comes after old french
+const languages = ['pie', 'middle english', 'old english', 'modern english', 'modern french','old french', 'middle french', 'anglo-french', 'french',
   'old low frankish', 'spanish', 'italian', 'old norse', 'scandanavian', 'swedish','old saxon',
   'old frisian', 'west frisian', 'middle dutch', 'dutch', 'proto-germanic', 'protogermanic',
   'west germanic', 'old high german', 'germanic', 'german','sanskrit', 'welsh','gothic',
   'latin', 'vulgar latin', 'greek', 'arabic', 'hebrew', 'etruscan', 'czech', 'slavic', 'russian', 'gallo-roman',
   'old church slavonic', 'pie root', 'chinese', 'japanese', 'hittite', 'lithuanian', 'malay',
-  'bantu', 'swahili', 'portuguese', 'gaulish', 'old irish','afrikaans', 'semetic', 'phoenician', 'phoenician root'
+  'bantu', 'swahili', 'portuguese', 'gaulish', 'old irish','afrikaans', 'semetic', 'phoenician', 'phoenician root',
+  'avestan'
   ]
 function findOrigins(text){
   var origins = []
@@ -24,8 +24,11 @@ function findOrigins(text){
       // therefore we know its 'from')
       if (text[i].toLowerCase().indexOf(languages[x]) >= 0 && (text[i].toLowerCase().indexOf("from") > 0 || i == 0)){
         // add the data to origins
-        origins.push({"language": languages[x], "word": text[i+1]})
-        break;
+        if (text[i+1]){
+          origins.push({"language": languages[x], "word": text[i+1]})
+          break;
+        }
+
       }
     }
   }
@@ -49,7 +52,7 @@ function findCousins(text){
           langs.push(elem);
         }
       })
-      console.log("additional langs: "+langs)
+      var word = text[i+1]
       langs.forEach(function(elem){
         cousins.push({"root": root, "language": elem, "word": word})
       })
@@ -63,7 +66,6 @@ function findCousins(text){
           langs.push(elem)
         }
       })
-      console.log(langs)
       var word = text[i+1]
       var lookingForClosing = true;
       langs.forEach(function(elem){
@@ -83,11 +85,13 @@ router.get("/:word", function(req, res, next){
   var word = req.params.word
   Scraper.get(word)
   .then(function(result){
+    console.log(result)
     parseEtymology(result[0].text, function(parsedEtymology){
       res.json({
         confirmation: 'success',
         origins: parsedEtymology[0],
-        cousins: parsedEtymology[1]
+        cousins: parsedEtymology[1],
+        relatedEntries: result.relatedEntries
       })
     })
   })
