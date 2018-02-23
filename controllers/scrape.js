@@ -59,6 +59,7 @@ module.exports = {
           }
         })
         var relatedWords = []
+        // scrape the related entries
         $("ul").each(function(i, element){
           if (element.attribs.class == "related__container--22iKI"){
             element.children.forEach(function(elem){
@@ -66,8 +67,9 @@ module.exports = {
                 // if it is dissimlar enough
                 var relatedWord = el.children[0].data
                 var similarity = stringSimilarity.compareTwoStrings(relatedWord, word)
-                if (similarity < .6){
-                  console.log("similarity between "+word+" and "+relatedWord+ " = "+similarity)
+                // why .6 ...I dunno seemed like a good cut-off point
+                // console.log("similarity between "+word+" and "+relatedWord+" = "+similarity)
+                if (relatedWord.indexOf(word) == -1 && similarity < .6){
                   relatedWords.push(relatedWord)
                 }
               })

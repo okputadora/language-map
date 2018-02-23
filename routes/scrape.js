@@ -14,11 +14,20 @@ const languages = ['pie', 'middle english', 'old english', 'modern english', 'mo
   'avestan'
   ]
 function findOrigins(text){
+
   var origins = []
+  var originsIndex
   // I don't like this nested for loop thing here but forEach wasn't cutting it
   // for the first one because I want to increment by 2 and I need to be able to
   // break out of the second one
   for (var i = 0; i < text.length; i += 2){
+
+    // parse the definition if there is one
+    if (text[i].indexOf('"') >= 0 && origins.length > 0){
+      definition = text[i].match( /"(.*?)"/ )[1];
+      origins[originsIndex].definition = definition
+
+    }
     for (var x = 0; x < languages.length; x++){
       // if this bit of text contains a language keyword and 'from' or its the first text bit (and
       // therefore we know its 'from')
@@ -26,12 +35,16 @@ function findOrigins(text){
         // add the data to origins
         if (text[i+1]){
           origins.push({"language": languages[x], "word": text[i+1]})
+          // save this index so if we find a definition later we know where to
+          // put it
+          originsIndex = origins.length - 1
           break;
         }
 
       }
     }
   }
+  console.log(origins)
   return origins;
 }
 
@@ -39,7 +52,16 @@ function findOrigins(text){
 // into smaller reusable functions
 function findCousins(text){
   var cousins = []
+  var cousinsIndex = 0;
   for (var i = 0; i < text.length; i += 2){
+    if (text[i].indexOf('"') >= 0 && cousins.length > 0){
+      definition = text[i].match( /"(.*?)"/ )[1];
+      console.log(definition)
+      console.log(cousins)
+      console.log(cousinsIndex)
+      cousins[cousinsIndex].definition = definition
+
+    }
     // keep adding until we find the end of the source also
     if (lookingForClosing){
       // if we've found the closing
@@ -55,6 +77,7 @@ function findCousins(text){
       var word = text[i+1]
       langs.forEach(function(elem){
         cousins.push({"root": root, "language": elem, "word": word})
+        cousinsIndex = cousins.length - 1
       })
 
     }
@@ -79,13 +102,17 @@ function parseEtymology(text, callback){
   // returns array of origin objects
   var origins = findOrigins(text)
   var cousins = findCousins(text)
+  if (origins.length == 0) {
+    origins = text.join()
+  }
+  console.log(origins.length)
   callback([origins, cousins])
 }
 router.get("/:word", function(req, res, next){
   var word = req.params.word
   Scraper.get(word)
   .then(function(result){
-    console.log(result)
+    // console.log(result)
     parseEtymology(result[0].text, function(parsedEtymology){
       res.json({
         confirmation: 'success',
