@@ -11,18 +11,17 @@
   </svg>
 </body>
 
-<script src="//d3js.org/d3.v4.min.js"></script>
+
 <script src="/javascripts/dataVis.js"></script> -->
 
 <!DOCTYPE html>
 <html>
     <head>
         <title>Simple Tree and Cluster Demo</title>
-        <script src="http://d3js.org/d3.v2.js"></script>
         <style>
             svg {
                 border: solid 1px #ccc;
-                font: 10px sans-serif;
+                font: 15px sans-serif;
             }
             .link {
                 fill: none;
@@ -33,103 +32,10 @@
 
     </head>
     <body>
-        <button id="tree">Tree</button>
-        <button id="cluster">Cluster</button>
+        <button style="position: fixed; top:150px; left: 200px; background: none; padding: 10px; letter-spacing: .06em; border: .5px solid #a9a9a9;">expand map</button>
         <div id="viz"></div>
-
-        <script type="text/javascript">
-            //JSON object with the data
-            var treeData =
-            {
-    "language": "pie",
-    "word": "*melith",
-    "definition": "anything good of its kind",
-    "children":[
-      {
-        "language": "pie",
-        "word": "*k(e)neko-",
-        "definition": "gold",
-        "children":[
-          {
-            "language": "proto-germanic",
-            "word": "*hunagam",
-            "definition": "honey",
-            "children":[
-              {
-                "language": "old english",
-                "word": "hunig",
-                "definition": "honey,",
-                "children":[
-                  {
-                    "language": "middle english",
-                    "word": "hony",
-                    "children":[
-                      {
-                        "language": "english",
-                        "word": "honey",
-                        "definition": "coming soon",
-                        "children":[
-
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-            update(2);
-            d3.select("#tree")
-            .on("click", function(d,i) {
-                update(2)});
-            d3.select("#cluster")
-            .on("click", function(d,i) {
-                update(1)});
-            function update(type) {
-
-                d3.select("svg")
-                .remove();
-                // Create a svg canvas
-                var vis = d3.select("#viz").append("svg:svg")
-                .attr("width", 2000)
-                .attr("height", 3000)
-                .append("svg:g")
-                .attr("transform", "translate(40, 0)");
-                if (type==1)
-                    var layout = d3.layout.cluster().size([800,800]);
-                else
-                    var layout = d3.layout.tree().size([800,800]);
-                var diagonal = d3.svg.diagonal()
-                // change x and y (for the left to right tree)
-                .projection(function(d) { return [d.y, d.x]; });
-                // Preparing the data for the tree layout, convert data into an array of nodes
-                var nodes = layout.nodes(treeData);
-                console.log(nodes)
-                // Create an array with all the links
-                var links = layout.links(nodes);
-                var link = vis.selectAll("pathlink")
-                .data(links)
-                .enter().append("svg:path")
-                .attr("class", "link")
-                .attr("d", diagonal)
-                var node = vis.selectAll("g.node")
-                .data(nodes)
-                .enter().append("svg:g")
-                .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
-                // Add the dot at every node
-                node.append("svg:circle")
-                .attr("r", 3.5);
-                // place the name atribute left or right depending if children
-                node.append("svg:text")
-                .attr("dx", function(d) { return d.children ? -8 : 8; })
-                .attr("dy", 3)
-                .attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
-                .text(function(d) { return d.language, d.word;});
-            }
-        </script>
     </body>
 </html>
+<script type="text/javascript" src="/javascripts/d3plus.full.js"></script>
+<script src="//d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="/javascripts/dataVis.js"></script>
