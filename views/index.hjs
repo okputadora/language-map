@@ -5,8 +5,13 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1>Language Map</h1>
+    <h1>Search for a Map</h1>
     <form action ='/api' method='get'>
+      <input type='text' name='word' placeholder="enter any english word..."/>
+      <input type='submit' value='submit'></submit>
+    </form>
+    <h1>Add to the database</h1>
+    <form action ='/scrape' method='post'>
       <input type='text' name='word' placeholder="enter any english word..."/>
       <input type='submit' value='submit'></submit>
     </form>
