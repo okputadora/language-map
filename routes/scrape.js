@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const arrayToTree = require('array-to-tree')
-var EtymologyController = require('../controllers/EtymologyController')
+var etymologyController = require('../controllers/etymologyController')
 
 // // important that languages contained in the names of other languages come after
 // // i.e.french comes after old french -- this is because...
@@ -149,10 +148,10 @@ var EtymologyController = require('../controllers/EtymologyController')
 //   callback([tree, cousins])
 // }
 
-router.get("/:word", function(req, res, next){
+router.post("/:word", function(req, res, next){
   var word = req.params.word
   // grab the text from the web
-  EtymologyController.post(word)
+  etymologyController.post(word)
   .then(function(etymology){
     res.json({
       confirmation: "success",

@@ -78,7 +78,6 @@ module.exports = {
         })
         etymology["relatedEntries"] = relatedWords
         etymology["word"] = word
-        console.log(etymology)
         resolve(etymology)
       })
     })
