@@ -52,7 +52,7 @@ function findOrigins(text){
   return origins;
 }
 // much room for improvement here to break things down
-// into smaller reusable functions
+// into smaller reusable functions -- also we're only returning the first root
 function findCousins(text){
   var cousins = []
   var cousinsIndex = 0;
@@ -140,7 +140,7 @@ function parseEtymology(text, word, callback){
     array.forEach(function(elem, i){
 
       if (i < array.length - 1){
-        array[i+1].children = elem;
+        array[i+1].children = [elem];
       }
     })
     return array[array.length-1]
