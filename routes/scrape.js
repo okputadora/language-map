@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const arrayToTree = require('array-to-tree')
 var Scraper = require('../controllers/scrape')
 
 // important that languages contained in the names of other languages come after
@@ -22,32 +23,34 @@ function findOrigins(text){
   // break out of the second one
   for (var i = 0; i < text.length; i += 2){
 
-    // parse the definition if there is one
+    // parse the definition if there is one, but don't look for quotes in the first text bit
     if (text[i].indexOf('"') >= 0 && origins.length > 0){
       definition = text[i].match( /"(.*?)"/ )[1];
       origins[originsIndex].definition = definition
 
     }
+    // go through all of the languages and see if they're in the text
     for (var x = 0; x < languages.length; x++){
       // if this bit of text contains a language keyword and 'from' or its the first text bit (and
       // therefore we know its 'from')
       if (text[i].toLowerCase().indexOf(languages[x]) >= 0 && (text[i].toLowerCase().indexOf("from") > 0 || i == 0)){
-        // add the data to origins
+        // and if there's another text bit after this one
         if (text[i+1]){
+          // then we know the next text bit is the word so add it and the language to origins
           origins.push({"language": languages[x], "word": text[i+1]})
           // save this index so if we find a definition later we know where to
           // put it
           originsIndex = origins.length - 1
+          // we found the language, so rather than look through the rest of them
+          // we break from the for loop
           break;
         }
 
       }
     }
   }
-  console.log(origins)
   return origins;
 }
-
 // much room for improvement here to break things down
 // into smaller reusable functions
 function findCousins(text){
@@ -56,9 +59,6 @@ function findCousins(text){
   for (var i = 0; i < text.length; i += 2){
     if (text[i].indexOf('"') >= 0 && cousins.length > 0){
       definition = text[i].match( /"(.*?)"/ )[1];
-      console.log(definition)
-      console.log(cousins)
-      console.log(cousinsIndex)
       cousins[cousinsIndex].definition = definition
 
     }
@@ -98,22 +98,65 @@ function findCousins(text){
   }
   return cousins
 }
-function parseEtymology(text, callback){
+function parseEtymology(text, word, callback){
   // returns array of origin objects
   var origins = findOrigins(text)
+  origins.unshift({language: 'english', word: word, definition:'coming soon'})
+  // console.log(origins)
   var cousins = findCousins(text)
+
+  // if we couldn't produce a tree structure from the text
   if (origins.length == 0) {
     origins = text.join()
   }
-  console.log(origins.length)
-  callback([origins, cousins])
+
+  // this  next function was more challenging than I thought.
+  // treeify copies every element and puts it into the
+  // next elements children property. After that loop is complete
+  // the last element of the array has the tree structure we want
+
+  // also this should be moved to the front end. we dont want to store the data
+  // like this because it seems like it will be harder to retrieve. We'll just preform
+  // treeify after we get the data from the database...or better yet! make this a method
+  // of Etymology Model called treeVersion
+  function treeify(array){
+    // do some reformatting
+    array.forEach(function(element, i){
+      // check to see if this language is pie or pie root. if so, we're
+      // going to set the cutoff length here because anything that comes after this
+      // is not relevant to the tree
+      if (element.language == 'pie' || element.language == 'pie root'){
+        cutoffLength = i + 1
+      }
+      // append children property to all but the last
+      if (i < array.length - 1){
+        element["children"] = []
+      }
+    })
+    // if we found pie
+    array.length=cutoffLength
+
+    // add this element into the next one's children property
+    array.forEach(function(elem, i){
+
+      if (i < array.length - 1){
+        array[i+1].children = elem;
+      }
+    })
+    return array[array.length-1]
+  }
+  var tree = treeify(origins)
+  callback([tree, cousins])
 }
+
 router.get("/:word", function(req, res, next){
   var word = req.params.word
   Scraper.get(word)
   .then(function(result){
-    // console.log(result)
-    parseEtymology(result[0].text, function(parsedEtymology){
+    // when we're ready to get all the paragraphs and do multiple
+    // entries for differen parts of speech we need to changes result[0]
+    // to just the whole result
+    parseEtymology(result[0].text, word, function(parsedEtymology){
       res.json({
         confirmation: 'success',
         origins: parsedEtymology[0],
