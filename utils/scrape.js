@@ -77,6 +77,7 @@ module.exports = {
           }
         })
         etymology["relatedEntries"] = relatedWords
+        etymology["word"] = word
         resolve(etymology)
       })
     })

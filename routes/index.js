@@ -3,6 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  resource = req.query.resource
   res.render('index', { title: 'Express' });
 });
 
@@ -11,7 +12,7 @@ router.get('/map', function(req, res, next){
 })
 router.post('/submit', function(req, res, next){
   var word = req.body.word;
-  res.redirect('/scrape/' + word);
+  res.redirect('/api/' + word);
 })
 
 module.exports = router;
