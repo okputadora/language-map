@@ -4,10 +4,21 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 var scrape = require('./routes/scrape');
 var map = require('./routes/map');
+
+var dbUrl = 'mongodb://localhost/language_map'
+mongoose.connect(dbUrl, function(err, res){
+  if(err){
+    console.log('DB connection failed' + dbUrl)
+  }
+  else{
+    console.log('DB connection successfull ' + dbUrl)
+  }
+})
 
 
 var app = express();
