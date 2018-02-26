@@ -1,53 +1,74 @@
 
 console.log("hello")
-var treeData =
-  {
+var treeData = {
   "language": "pie",
-  "word": "*melith",
-  "definition": "anything good of its kind",
+  "word": "*reg-",
   "children":[
     {
-    "language": "pie",
-    "word": "*k(e)neko-",
-    "definition": "gold",
-    "children":[
-    {
       "language": "proto-germanic",
-      "word": "*hunagam",
-      "definition": "honey",
+      "word": "*regna-",
       "children":[
         {
-          "language": "old norse",
-          "word": "hunang",
-          "defintion": "honey",
-          "children": [{}],
-        },
-        {
           "language": "old english",
-          "word": "hunig",
-          "definition": "honey,",
+          "word": "regn",
           "children":[
             {
-              "language": "middle english",
-              "word": "hony",
+              "language": "english",
+              "word": "rain",
+              "definition": "coming soon",
               "children":[
-                {
-                  "language": "english",
-                  "word": "honey",
-                  "definition": "coming soon",
-                  "children":[
 
-                  ]
-                }
               ]
             }
-          ]
+          ],
+          "definition": "rain,"
+        },
+        {
+          "root": "*regna-",
+          "language": "old saxon",
+          "word": "regan"
+        },
+        {
+          "root": "*regna-",
+          "language": "old frisian",
+          "word": "rein"
+        },
+        {
+          "root": "*regna-",
+          "language": "middle dutch",
+          "word": "reghen"
+        },
+        {
+          "root": "*regna-",
+          "language": "dutch",
+          "word": "reghen"
+        },
+        {
+          "root": "*regna-",
+          "language": "dutch",
+          "word": "regen"
+        },
+        {
+          "root": "*regna-",
+          "language": "german",
+          "word": "regen"
+        },
+        {
+          "root": "*regna-",
+          "language": "old norse",
+          "word": "regn"
+        },
+        {
+          "root": "*regna-",
+          "language": "gothic",
+          "word": "rign",
+          "definition": "rain"
         }
-      ]
+      ],
+      "definition": "rain"
     }
-  ]
-}
-]
+  ],
+  "definition": "to wet, moisten"
 }
 update();
 
@@ -63,9 +84,9 @@ function update() {
     // append an svg container called g(roup)
     .append("svg:g")
     // position the group in the svg container
-    .attr("transform", "translate(150, -200)");
+    .attr("transform", "translate(150,50)");
     // create the cluster layout
-    var layout = d3.layout.cluster().size([1000,1000]);
+    var layout = d3.layout.cluster().size([500,500]);
     var diagonal = d3.svg.diagonal()
     // swap x and y (for the left to right tree instead of top to bottom)
     .projection(function(d) { return [d.y, d.x]; });
@@ -94,18 +115,18 @@ function update() {
     // place the name atribute left or right depending if children
     node.append("svg:text")
     .attr("dx", function(d) { return d.children ? -8 : 8; })
-    .attr("dy", -10)
+    .attr("dy", -5)
     .attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
     .style("font-weight", "bold")
     .text(function(d) { return d.language;})
     node.append("svg:text")
     .attr("dx", function(d) { return d.children ? -8 : 8; })
-    .attr("dy", 20)
+    .attr("dy", 10)
     .attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
     .text(function(d) { return d.word;})
     node.append("svg:text")
     .attr("dx", function(d) { return d.children ? -8 : 8; })
-    .attr("dy", 40)
+    .attr("dy", 25)
     .attr("width", 50)
     .attr("class", "definition")
     .attr("text-anchor", function(d) { return d.children ? "end" : "start"; })

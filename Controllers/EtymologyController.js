@@ -21,7 +21,6 @@ module.exports = {
           reject(err)
           return
         }
-        console.log(result[0].treeify())
         resolve(result[0].treeify())
       })
     })
@@ -55,6 +54,7 @@ module.exports = {
     })
   }
 }
+
 function parseEtymology(unparsed){
   text = unparsed.text
   word = unparsed.word
@@ -92,7 +92,7 @@ function findOrigins(text){
         // and if there's another text bit after this one
         if (text[i+1]){
           // then we know the next text bit is the word so add it and the language to origins
-          origins.push({"language": languages[x], "word": text[i+1]})
+          origins.push({"language": languages[x], "word": text[i+1], "children":[]})
           // save this index so if we find a definition later we know where to
           // put it
           originsIndex = origins.length - 1
