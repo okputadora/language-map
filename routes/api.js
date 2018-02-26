@@ -4,11 +4,13 @@ var router = express.Router()
 
 router.get('/', function(req, res, next){
   var word = req.query.word
-	if (word == null){
+  console.log("WORD "+ word)
+	if (!word){
 		res.json({
 			confirmation:'fail',
 			message:'Invalid resource...check your spelling'
 		})
+    return
 	}
 	// the false parameter here indicated that we dont want the raw response
 	//  we want the password to be hidden. req.query gets paramaters for a GET Request

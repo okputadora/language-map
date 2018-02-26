@@ -32,10 +32,12 @@
 
     </head>
     <body>
-        <button style="position: fixed; top:150px; left: 200px; background: none; padding: 10px; letter-spacing: .06em; border: .5px solid #a9a9a9;">expand map</button>
+        <div>Etymology of <span id="word">{{word}}</span></div>
         <div id="viz"></div>
     </body>
 </html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- will need ofr text wrapping eventually -->
 <script type="text/javascript" src="/javascripts/d3plus.full.js"></script>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript" src="/javascripts/dataVis.js"></script>

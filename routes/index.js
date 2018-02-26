@@ -8,7 +8,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/map', function(req, res, next){
-  res.render('map')
+  word = req.query.word
+  console.log("WORD in index " +word)
+  res.render('map', {word: word})
 })
 router.post('/submit', function(req, res, next){
   var word = req.body.word;
