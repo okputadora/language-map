@@ -21,7 +21,8 @@ module.exports = {
           reject(err)
           return
         }
-        resolve(result)
+        console.log(result[0].treeify())
+        resolve(result[0].treeify())
       })
     })
   },
@@ -39,7 +40,7 @@ module.exports = {
           cousins: parsedResult.cousins,
           relatedEntries: result.relatedEntries
         }
-        console.log("parsed result "+parsedResult)
+        console.log("parsed result "+ parsedResult)
         Etymology.create(etymology, function(err, etymologyFromDb){
           if(err){
             reject(err)
@@ -152,42 +153,3 @@ function findCousins(text){
   }
   return cousins
 }
-
-// this will eventually live in the Model as a method
-
-// this  next function was more challenging than I thought.
-// treeify copies every element and puts it into the
-// next elements children property. After that loop is complete
-// the last element of the array has the tree structure we want
-
-// also this should be moved to the front end. we dont want to store the data
-// like this because it seems like it will be harder to retrieve. We'll just preform
-// treeify after we get the data from the database...or better yet! make this a method
-// of Etymology Model called treeVersion
-// function treeify(array){
-//   // do some reformatting
-//   array.forEach(function(element, i){
-//     // check to see if this language is pie or pie root. if so, we're
-//     // going to set the cutoff length here because anything that comes after this
-//     // is not relevant to the tree
-//     if (element.language == 'pie' || element.language == 'pie root'){
-//       cutoffLength = i + 1
-//     }
-//     // append children property to all but the last
-//     if (i < array.length - 1){
-//       element["children"] = []
-//     }
-//   })
-//   // if we found pie - proto-indo-european
-//   array.length=cutoffLength
-//
-//   // add this element into the next one's children property
-//   array.forEach(function(elem, i){
-//
-//     if (i < array.length - 1){
-//       array[i+1].children = [elem];
-//     }
-//   })
-//   return array[array.length-1]
-// }
-// var tree = treeify(origins)
