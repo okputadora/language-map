@@ -3,14 +3,19 @@ const Scrape = require('../utils/scrape.js')
 const Promise = require('bluebird')
 // important that languages contained in the names of other languages come after
 // // i.e.french comes after old french -- this is because...
-const languages = ['pie', 'middle english', 'old english', 'modern english', 'modern french','old french', 'middle french', 'anglo-french', 'french',
-  'old low frankish', 'spanish', 'italian', 'old norse', 'scandanavian', 'swedish','old saxon',
-  'old frisian', 'west frisian', 'middle dutch', 'dutch', 'proto-germanic', 'protogermanic',
-  'west germanic', 'old high german', 'germanic', 'german','sanskrit', 'welsh','gothic',
-  'latin', 'vulgar latin', 'greek', 'arabic', 'hebrew', 'etruscan', 'czech', 'slavic', 'russian', 'gallo-roman',
-  'old church slavonic', 'pie root', 'chinese', 'japanese', 'hittite', 'lithuanian', 'malay',
-  'bantu', 'swahili', 'portuguese', 'gaulish', 'old irish','afrikaans', 'semetic', 'phoenician', 'phoenician root',
-  'avestan'
+// probaly want to move this out of here an import it. clunky in here
+const languages = ['pie', 'middle english', 'old english', 'modern english',
+  'modern french','old french', 'middle french', 'anglo-french', 'french',
+  'old low frankish', 'spanish', 'italian', 'old norse', 'scandanavian',
+  'swedish','icelandic', 'old saxon','old frisian', 'west frisian',
+  'proto-germanic', 'protogermanic', 'west germanic', 'old high german',
+  'germanic', 'german','sanskrit', 'welsh','gothic','latin', 'vulgar latin',
+  'greek', 'arabic', 'hebrew', 'egyptian','etruscan',  'czech', 'slavic',
+  'old church slavonic','proto-slavic', 'russian',
+  'gallo-roman','old church slavonic', 'pie root', 'chinese', 'japanese',
+  'hittite', 'lithuanian', 'malay','bantu', 'swahili', 'portuguese', 'polish',
+  'gaulish', 'old irish','afrikaans duth','afrikaans','middle dutch', 'dutch',
+  'semetic', 'phoenician','phoenician root','avestan',
   ]
 
 module.exports = {

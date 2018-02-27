@@ -9,6 +9,7 @@ $(document).ready(function(){
     success: function(response){
       console.log(response.results.origins)
       treeData = response.results.origins
+      $("#relEntries").append(response.results.relatedEntries)
       update(treeData)
     }
 
