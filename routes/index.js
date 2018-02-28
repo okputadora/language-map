@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
   resource = req.query.resource
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Etymology Map' });
 });
 
 router.get('/map', function(req, res, next){

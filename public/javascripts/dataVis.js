@@ -12,80 +12,8 @@ $(document).ready(function(){
       $("#relEntries").append(response.results.relatedEntries)
       update(treeData)
     }
-
   })
-  // var treeData = {
-  //   "language": "pie",
-  //   "word": "*reg-",
-  //   "children":[
-  //     {
-  //       "language": "proto-germanic",
-  //       "word": "*regna-",
-  //       "children":[
-  //         {
-  //           "language": "old english",
-  //           "word": "regn",
-  //           "children":[
-  //             {
-  //               "language": "english",
-  //               "word": "rain",
-  //               "definition": "coming soon",
-  //               "children":[
-  //
-  //               ]
-  //             }
-  //           ],
-  //           "definition": "rain,"
-  //         },
-  //         {
-  //           "root": "*regna-",
-  //           "language": "old saxon",
-  //           "word": "regan"
-  //         },
-  //         {
-  //           "root": "*regna-",
-  //           "language": "old frisian",
-  //           "word": "rein"
-  //         },
-  //         {
-  //           "root": "*regna-",
-  //           "language": "middle dutch",
-  //           "word": "reghen"
-  //         },
-  //         {
-  //           "root": "*regna-",
-  //           "language": "dutch",
-  //           "word": "reghen"
-  //         },
-  //         {
-  //           "root": "*regna-",
-  //           "language": "dutch",
-  //           "word": "regen"
-  //         },
-  //         {
-  //           "root": "*regna-",
-  //           "language": "german",
-  //           "word": "regen"
-  //         },
-  //         {
-  //           "root": "*regna-",
-  //           "language": "old norse",
-  //           "word": "regn"
-  //         },
-  //         {
-  //           "root": "*regna-",
-  //           "language": "gothic",
-  //           "word": "rign",
-  //           "definition": "rain"
-  //         }
-  //       ],
-  //       "definition": "rain"
-  //     }
-  //   ],
-  //   "definition": "to wet, moisten"
-  // // }
-
-
+  
   function update(treeData) {
 
       d3.select("svg")
