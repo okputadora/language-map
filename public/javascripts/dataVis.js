@@ -13,25 +13,23 @@ $(document).ready(function(){
       update(treeData)
     }
   })
-  
+  d3.select("svg")
+  .remove();
+  // Create a svg canvas this scg:scg is equal to namespace:tagname
+  var vis = d3.select("#viz").append("svg:svg")
+    // set the width and the height
+    .attr("width", "100%")
+    .attr("height", "90vh")
+    // append an svg container called g(roup)
+    .append("svg:g")
+    // position the group in the svg container
+  .attr("transform", "translate(250,50)");
+  // create the cluster layout
+  var layout = d3.layout.tree().size([500,700]);
+  var diagonal = d3.svg.diagonal()
+  // swap x and y (for the left to right tree instead of top to bottom)
+  .projection(function(d) { return [d.y, d.x]; });
   function update(treeData) {
-
-      d3.select("svg")
-      .remove();
-      // Create a svg canvas this scg:scg is equal to namespace:tagname
-      var vis = d3.select("#viz").append("svg:svg")
-      // set the width and the height
-      .attr("width", 1500)
-      .attr("height", 700)
-      // append an svg container called g(roup)
-      .append("svg:g")
-      // position the group in the svg container
-      .attr("transform", "translate(250,50)");
-      // create the cluster layout
-      var layout = d3.layout.cluster().size([500,700]);
-      var diagonal = d3.svg.diagonal()
-      // swap x and y (for the left to right tree instead of top to bottom)
-      .projection(function(d) { return [d.y, d.x]; });
       // Preparing the data for the tree layout, convert data into an array of nodes
       var nodes = layout.nodes(treeData);
       nodes.forEach(function(elem){
@@ -44,13 +42,13 @@ $(document).ready(function(){
       .data(links)
       // namespace:tag syntax again
       .enter().append("svg:path")
-      .attr("class", "link")
-      .attr("d", diagonal)
+        .attr("class", "link")
+        .attr("d", diagonal)
       var node = vis.selectAll("g.node")
-      .data(nodes)
-      .enter().append("svg:g")
-      // where are d.y and d.x coming from
-      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+        .data(nodes)
+        .enter().append("svg:g")
+        // where are d.y and d.x coming from
+        .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
       // Add the dot at every node
       node.append("svg:circle")
       .attr("r", 3.5);
