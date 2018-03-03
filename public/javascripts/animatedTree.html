@@ -37,19 +37,20 @@
         //   }
         // })
         var sfid = 1000; // we will increment this each time we make a new datum and
-        var d = {id: "ohai"+(++sfid)}
         // assign this to its id
         var w = 760, // width of entire vis svg
         h = 1700, // height -- having theswe as global variables allows us to set tree relative to svg container
-        root = {language: "PIE", word: "melith", children: [], definition:"a definition", id:d}, // our data
+        root = {language: "PIE", word: "melith", children: [], definition:"a definition", id:sfid}, // our data
         data = [root],
         // create a tree (a little smaller than the vis svg)
         tree = d3.layout.tree().size([w - 30, h - 40]),
-        diagonal = d3.svg.diagonal()
-        .projection(function(d) {return [d.y, d.x]})// can;t find documentation on this...what is it?
+        diagonal = d3.svg.diagonal()// changing the orientation of the tree to left right
         duration = 2500, //duration of animation
         $("#expand").on("click", update); // we'll likely do away with this
 
+        // for the first entry, append is starting point
+        root.x0 = 0;
+        root.y0 = 365;
         // create our main container
         var vis = d3.select("body").append("svg:svg")
         // swapped width and height because we've switch from a top-bottom layout
@@ -75,14 +76,14 @@
         .attr("cx", x)
         .attr("cy", y)
         vis.select("g").append("svg:text")
-          .attr("dx", x)
-          .attr("dy", y)
-          .attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
+          .attr("dx", 50)
+          .attr("dy", 350)
+          .attr("text-anchor", function(d) { return root.children ? "end" : "start"; })
           .text(root.language)
         vis.select("g").append("svg:text")
-          .attr("dx", x = x(d) + 10)
+          .attr("dx", 50)
           .attr("dy", y)
-          .attr("text-anchor", function(d) { return d.children ? "end" : "start"; })
+          .attr("text-anchor", function(d) { return root.children ? "end" : "start"; })
           .text(root.word)
 
         // update the tree -- I wonder if update updates the whole tree or just
@@ -94,8 +95,9 @@
           if (data.length >= 100) {
             data.splice(50, 1); // remove the 50th element ??? why the 50th ???
           }
+          sfid++
           // d is the datum
-          var d = {language: "English", word:"Honey", id:d, children:[]} // here we're setting a piece of data to have an id ohai+incremented sfid
+          var d = {language: "English", word:"Honey", id:sfid, children:[]} // here we're setting a piece of data to have an id ohai+incremented sfid
           // randomly pick a parent for this data
           // this will be one of the big things we're changing. we need to FIND
           // the parent of our new node
@@ -112,17 +114,18 @@
           .data(nodes, nodeId);
 
           // Enter any new nodes at the parent's previous position.
+          // we have to append a group first so we can append text
           node.enter().append("svg:g").append("svg:circle")
-          .attr("class", "node")
+          .attr("id", d.language)
           .attr("r", 3.5)
-          // d is ths id
+          // d is the datum
           .attr("cx", function(d) { return d.parent.data.x0; })
           .attr("cy", function(d) { return d.parent.data.y0; })
           .transition()
           .duration(duration)
           .attr("cx", x)
           .attr("cy", y)
-          .text(d.language)
+          vis.select("#" + d.language).text(d.language)
 
 
           node.exit().remove();
@@ -153,11 +156,11 @@
           // Transition links to their new position.
           link.transition()
           .duration(duration)
-      .attr("d", diagonal);
+          .attr("d", diagonal);
 }
 
 function linkId(d) {
-  return d.source.data.id + "-" + d.target.data.id;
+  return d.root.data.id + "-" + d.target.data.id;
 }
 
 function nodeId(d) {
@@ -165,7 +168,6 @@ function nodeId(d) {
 }
 
 function x(d) {
-  console.log(data)
   return d.data.x0 = d.y;
 }
 

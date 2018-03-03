@@ -23,6 +23,8 @@ EtymologySchema.methods.treeify = function(){
   return treeData
 }
 
+
+
 module.exports = mongoose.model('EtymologySchema', EtymologySchema)
 
 // this  next problem was more challenging than I thought.

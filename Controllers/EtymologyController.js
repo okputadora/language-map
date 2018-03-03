@@ -26,7 +26,7 @@ module.exports = {
           reject(err)
           return
         }
-        resolve(result[0].treeify())
+        resolve(result[0])
       })
     })
   },
