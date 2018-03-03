@@ -26,13 +26,22 @@ function initTree(inputData, cousins, relatedEntries){
       data = [root],
       tree = d3.layout.tree().size([w - 20, h - 20]),
       diagonal = d3.svg.diagonal().projection(function(d) {return [d.y, d.x]})
-      duration = 2050,
+      duration = 400,
       $("#expand").on("click", function(){
         datum = inputData.shift()
         update(datum)
       })
-      console.log("Data")
-      console.log(data)
+      timer = setInterval(function(){
+        datum = inputData.shift()
+        console.log("datum")
+        console.log(datum)
+        if (datum === undefined){
+          clearInterval(timer)
+          return
+        }
+        update(datum)
+      }, 400)
+
   var vis = d3.select("#viz").append("svg:svg")
       .attr("width", w)
       .attr("height", h)
@@ -40,11 +49,21 @@ function initTree(inputData, cousins, relatedEntries){
       .attr("transform", "translate(10, 10)");
   vis.selectAll("circle")
       .data(tree(root))
-    .enter().append("svg:circle")
+    .enter().append("svg:g").append("svg:circle")
       .attr("class", "node")
       .attr("r", 3.5)
       .attr("cx", x)
-      .attr("cy", y);
+      .attr("cy", y)
+      vis.select("g").append("svg:text")
+        .attr("dx", 50)
+        .attr("dy", 420)
+        .attr("text-anchor", function(d) { return root.children ? "end" : "start"; })
+        .text(root.language)
+      vis.select("g").append("svg:text")
+        .attr("dx", 50)
+        .attr("dy", 450)
+        .attr("text-anchor", function(d) { return root.children ? "end" : "start"; })
+        .text(root.word)  .attr("cy", y);
 
 
   function update(d) {
@@ -58,23 +77,23 @@ function initTree(inputData, cousins, relatedEntries){
         return
       }
     })
-    console.log("parent")
-    console.log(parent)
     if (parent.children) {
       parent.children.push(d);
     }
     else parent.children = [d];
     data.push(d);
-    console.log(data)
-    console.log("root")
-    console.log(root)
     // Compute the new tree layout. We'll stash the old layout in the data.
     var nodes = tree(root);
     // Update the nodes…
     var node = vis.selectAll("circle.node")
         .data(nodes, nodeId);
     // Enter any new nodes at the parent's previous position.
-    node.enter().append("svg:circle")
+    node.enter().append("svg:g")
+      // .append("svg:text")
+      //   .attr('dx', x)
+      //   .attr('dy', y)
+      //   .text(d.language)
+      .append("svg:circle")
         .attr("class", "node")
         .attr("r", 3.5)
         .attr("cx", function(d) { return d.parent.data.x0; })
@@ -93,7 +112,7 @@ function initTree(inputData, cousins, relatedEntries){
     var link = vis.selectAll("path.link")
         .data(tree.links(nodes), linkId);
     // Enter any new links at the parent's previous position.
-    link.enter().insert("svg:path", "circle")
+    link.enter().insert("svg:path", "g")
         .attr("class", "link")
         .attr("d", function(d) {
           var o = {x: d.source.data.y0, y: d.source.data.x0};
