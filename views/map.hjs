@@ -35,11 +35,11 @@
 
         <div>Etymology of <span id="word">{{word}}</span></div>
         <div id="viz"></div>
+        <button id="click">Expand</button>
         <div id="relEntries">Related entries: </div>
     </body>
 </html>
+<script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
+<script type="text/javascript" src="http://mbostock.github.com/d3/d3.layout.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!-- will need ofr text wrapping eventually -->
-<script type="text/javascript" src="/javascripts/d3plus.full.js"></script>
-<script src="//d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript" src="/javascripts/dataVis.js"></script>

@@ -23,7 +23,21 @@ EtymologySchema.methods.treeify = function(){
   return treeData
 }
 
-
+EtymologySchema.methods.parentify = function(){
+  origins = this.origins
+  cousins = this.cousins
+  for (i=0; i < origins.length - 1; i++){
+    origins[i].parent = origins[i+1].word
+  }
+  var data = {
+    word: this.word,
+    pos: this.pos,
+    origins: origins,
+    cousins: this.cousins,
+    relatedEntries: this.relatedEntries
+  }
+  return data;
+}
 
 module.exports = mongoose.model('EtymologySchema', EtymologySchema)
 

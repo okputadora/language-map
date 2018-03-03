@@ -26,7 +26,9 @@ module.exports = {
           reject(err)
           return
         }
-        resolve(result[0])
+        console.log("no error")
+        console.log(result[0].parentify())
+        resolve(result[0].parentify())
       })
     })
   },
@@ -136,7 +138,7 @@ function findCousins(text){
       })
       var word = text[i+1]
       langs.forEach(function(elem){
-        cousins.push({"root": root, "language": elem, "word": word})
+        cousins.push({"parent": root, "language": elem, "word": word})
         cousinsIndex = cousins.length - 1
       })
 
@@ -152,7 +154,7 @@ function findCousins(text){
       var word = text[i+1]
       var lookingForClosing = true;
       langs.forEach(function(elem){
-        cousins.push({"root": root, "language": elem, "word": word})
+        cousins.push({"parentt": root, "language": elem, "word": word})
       })
     }
   }
