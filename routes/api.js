@@ -17,9 +17,10 @@ router.get('/', function(req, res, next){
 	// req.body is for POST request
 	etymologyController.get(word)
 	.then(function(results){
+    console.log(results.origins)
 		res.json({
 	    confirmation: 'success',
-	    results: results
+	    result: results
 	  })
 	})
 	.catch(function(err){

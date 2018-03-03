@@ -26,9 +26,8 @@ module.exports = {
           reject(err)
           return
         }
-        console.log("no error")
         console.log(result[0].parentify())
-        resolve(result[0].parentify())
+        resolve(result[0])
       })
     })
   },
