@@ -153,7 +153,7 @@ function findCousins(text){
       var word = text[i+1]
       var lookingForClosing = true;
       langs.forEach(function(elem){
-        cousins.push({"parentt": root, "language": elem, "word": word})
+        cousins.push({"parent": root, "language": elem, "word": word})
       })
     }
   }

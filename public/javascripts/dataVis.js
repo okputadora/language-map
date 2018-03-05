@@ -12,23 +12,24 @@ $(document).ready(function(){
       data.forEach(function(elem, i){
         elem.id = "ohai" + (1000 + i)
       })
-      initTree(data, response.cousins, response.relatedEntries)
+      initTree(data, response.result.cousins, response.result.relatedEntries)
     }
   })
 function initTree(inputData, cousins, relatedEntries){
   $("#relEntries").append(relatedEntries)
   // update(treeData)
   var sfid = 1000;
-  var w = 1600,
+  console.log($(window).width())
+  var w = $(window).width(),
       h = 900,
       i = 0,
       root = inputData.shift(),
       data = [root],
-      tree = d3.layout.tree().size([w - 20, h - 20]),
+      tree = d3.layout.tree().size([h-20, w-250]),
       diagonal = d3.svg.diagonal().projection(function(d) {return [d.y, d.x]})
       duration = 800,
       $("#expand").on("click", function(){
-        datum = inputData.shift()
+        datum = cousins.shift()
         update(datum)
       })
       timer = setInterval(function(){
@@ -42,18 +43,16 @@ function initTree(inputData, cousins, relatedEntries){
         update(datum)
       }, duration)
 
-  var vis = d3.select("#viz").append("svg:svg")
+  var vis = d3.select("#viz").append("svg")
       .attr("width", w)
       .attr("height", h)
-    .append("svg:g")
-      .attr("transform", "translate(60, -260)");
-  vis.selectAll("text")
-      .data(tree(root))
-    .enter().append("svg:text")
-      .attr("class", "node")
-      .attr("dx", x)
-      .attr("dy", y)
-      .text(root.language+ ": " + root.word)
+    .append("g")
+      .attr("transform", "translate(10, 10)");
+
+  root.x0 = h /2
+  root.y0 = 0
+
+  update(root)
 
   function update(d) {
     if (data.length >= 100) {
@@ -74,19 +73,24 @@ function initTree(inputData, cousins, relatedEntries){
     // Compute the new tree layout. We'll stash the old layout in the data.
     var nodes = tree(root);
     // Update the nodes…
-    var node = vis.selectAll("text.node")
+    var node = vis.selectAll("g.node")
         .data(nodes, nodeId);
     // Enter any new nodes at the parent's previous position.
-    newGroup = node.enter().append("svg:text")
+    var newGroup = node.enter().append("g")
       .attr("class", "node")
-      .attr("dx", function(d) { return d.parent.data.x0; })
-      .attr("dy", function(d) { return d.parent.data.y0; })
+      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
       .attr("id", d.language)
-      .text(d.language + ": " + d.word)
-      .transition()
-        .duration(duration)
-        .attr("dx", x)
-        .attr("dy", y);
+    newGroup.append("text")
+    .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
+    .attr("dy", -10)
+    .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+    .style("font-weight", "bold")
+    .text(d.language)
+    newGroup.append("text")
+    .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
+    .attr("dy", 10)
+    .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+    .text(d.word)
     // d3.select("#" +d.language)("svg:text")
     // .attr("dx", function(d) { return d.parent.data.x0; })
     // .attr("dy", function(d) { return d.parent.data.y0; })
@@ -94,21 +98,21 @@ function initTree(inputData, cousins, relatedEntries){
     node.exit().remove()
     .transition()
       .duration(duration)
-      .attr("dx", x)
-      .attr("dy", y)
+      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
     // Transition nodes to their new position.
     node.transition()
         .duration(duration)
-        .attr("dx", x)
-        .attr("dy", y);
+        .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
     // Update the links…
     var link = vis.selectAll("path.link")
         .data(tree.links(nodes), linkId);
     // Enter any new links at the parent's previous position.
-    link.enter().insert("svg:path", "text")
+    link.enter().insert("svg:path", "g")
         .attr("class", "link")
         .attr("d", function(d) {
-          var o = {x: d.source.data.y0, y: d.source.data.x0};
+          var o = {y: d.source.data.y0, x: d.source.data.x0};
+          console.log("origin ")
+          console.log(o)
           return diagonal({source: o, target: o});
         })
       .transition()

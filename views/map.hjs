@@ -17,7 +17,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Simple Tree and Cluster Demo</title>
+        <title>Etymology of {{word}}</title>
         <style>
             svg {
                 border: solid 1px #ccc;
@@ -39,6 +39,8 @@
         <div id="relEntries">Related entries: </div>
     </body>
 </html>
+
+<script src="https://d3plus.org/js/d3plus-text.v0.9.full.min.js"></script>
 <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="/javascripts/dataVis.js"></script>
