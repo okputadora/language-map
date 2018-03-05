@@ -16,6 +16,7 @@ $(document).ready(function(){
     }
   })
 function initTree(inputData, cousins, relatedEntries){
+    console.log(cousins)
   $("#relEntries").append(relatedEntries)
   // update(treeData)
   var sfid = 1000;
@@ -78,19 +79,30 @@ function initTree(inputData, cousins, relatedEntries){
     // Enter any new nodes at the parent's previous position.
     var newGroup = node.enter().append("g")
       .attr("class", "node")
-      .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+      .attr("transform", function(d){
+        if(d.parent){
+          return "translate(" + d.parent.y + "," + d.parent.x + ")"
+        }
+        else{return "translate(" + 0 + "," + 440 + ")"}
+      })
       .attr("id", d.language)
     newGroup.append("text")
-    .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
-    .attr("dy", -10)
-    .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+    .attr("x", 0)
+    .attr("dy", -7)
+    .attr("text-anchor", "start")
     .style("font-weight", "bold")
     .text(d.language)
     newGroup.append("text")
-    .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
-    .attr("dy", 10)
-    .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+    .attr("x", 0)
+    .attr("dy", 15)
+    .attr("text-anchor", "start")
     .text(d.word)
+    newGroup.append("text")
+    .attr("x", 0)
+    .attr("dy", 30)
+    .attr("text-anchor", "start")
+    .style("font-style", "italic")
+    .text(d.definition)
     // d3.select("#" +d.language)("svg:text")
     // .attr("dx", function(d) { return d.parent.data.x0; })
     // .attr("dy", function(d) { return d.parent.data.y0; })
@@ -107,10 +119,14 @@ function initTree(inputData, cousins, relatedEntries){
     var link = vis.selectAll("path.link")
         .data(tree.links(nodes), linkId);
     // Enter any new links at the parent's previous position.
-    link.enter().insert("svg:path", "g")
+    link.enter().insert("path", "g")
         .attr("class", "link")
+        // TO HAVE A SMOOTHE TRANSITION FOR THE LINKS WE
+        // NEED TO FIGURE OUT WHAT"S GOING HERE
         .attr("d", function(d) {
-          var o = {y: d.source.data.y0, x: d.source.data.x0};
+          console.log("d")
+          console.log(d)
+          var o = {y: d.source.y, x: d.source.x}
           console.log("origin ")
           console.log(o)
           return diagonal({source: o, target: o});
