@@ -2,21 +2,32 @@
 <html>
   <head>
     <title>{{ title }}</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    <h1>Search for a Map</h1>
-
-    <form action ='/map' method='get'>
-      <input type='text' name='word' placeholder="enter any english word..."/>
-      <input type='submit' value='submit'></submit>
-    </form>
-    <h1>Add to the database</h1>
-    <form action ='/scrape' method='post'>
-      <input type='text' name='word' placeholder="enter any english word..."/>
-      <input type='submit' value='submit'></submit>
-    </form>
-    <div id="root"></div>
+    <div class='container'>
+      <div class='row text-center'>
+        <h1>EtyMaps</h1>
+        <p>EtyMaps provides clear visualizations of etymologies for english words</p>
+        <p>When you enter a new word, EtyMaps will trace its known lineage in a straight line</p>
+        <p>After, you can click "expand" to see how that lineage produced other words</p>
+        <p>This makes it possible to see how seemingly unrelated words are connected</p>
+        <form action ='/map' method='get'>
+          <div class='form-group'>
+            <input class='form-control input-lg text-center' type='text' name='word' placeholder="enter any english word..."/>
+          </div>
+          <input class='btn btn-success' type='submit' value='submit'></submit>
+        </form>
+        <!-- <h1>Add to the database</h1>
+        <form action ='/scrape' method='post'>
+          <input type='text' name='word' placeholder="enter any english word..."/>
+          <input type='submit' value='submit'></submit> -->
+        </form>
+      </div>
+    </div>
   </body>
-  <script type='text/javascript'src='/build/bundle.js'></script>
 </html>

@@ -6,9 +6,7 @@ $(document).ready(function(){
     url: "/api",
     data: {word: word},
     success: function(response){
-      console.log(response.result.origins)
       data = response.result.origins.reverse()
-      console.log(data)
       data.forEach(function(elem, i){
         elem.id = "ohai" + (1000 + i)
       })
@@ -16,36 +14,36 @@ $(document).ready(function(){
     }
   })
 function initTree(inputData, cousins, relatedEntries){
-    console.log(cousins)
-  $("#relEntries").append(relatedEntries)
+  relatedEntries.forEach(function(elem, i){
+    $("#relEntries").append(elem + ", ")
+  })
   // update(treeData)
   var sfid = 1000;
-  console.log($(window).width())
   var w = $(window).width(),
-      h = 900,
+      h = 700,
       i = 0,
       root = inputData.shift(),
       data = [root],
       tree = d3.layout.tree().size([h-20, w-250]),
       diagonal = d3.svg.diagonal().projection(function(d) {return [d.y, d.x]})
-      duration = 800,
+      duration = 400,
       $("#expand").on("click", function(){
-        datum = cousins.shift()
+        datum = cousins.pop()
+        console.log(datum)
         update(datum)
       })
       timer = setInterval(function(){
         datum = inputData.shift()
-        console.log("datum")
         console.log(datum)
         if (datum === undefined){
           clearInterval(timer)
           return
         }
         update(datum)
-      }, duration)
+      }, duration-100)
 
   var vis = d3.select("#viz").append("svg")
-      .attr("width", w)
+      .attr("width", w*.97)
       .attr("height", h)
     .append("g")
       .attr("transform", "translate(10, 10)");
@@ -67,6 +65,9 @@ function initTree(inputData, cousins, relatedEntries){
       }
     })
     if (parent.children) {
+      console.log("parent")
+      console.log(parent)
+
       parent.children.push(d);
     }
     else parent.children = [d];
@@ -124,11 +125,7 @@ function initTree(inputData, cousins, relatedEntries){
         // TO HAVE A SMOOTHE TRANSITION FOR THE LINKS WE
         // NEED TO FIGURE OUT WHAT"S GOING HERE
         .attr("d", function(d) {
-          console.log("d")
-          console.log(d)
           var o = {y: d.source.y, x: d.source.x}
-          console.log("origin ")
-          console.log(o)
           return diagonal({source: o, target: o});
         })
       .transition()
@@ -145,12 +142,12 @@ function initTree(inputData, cousins, relatedEntries){
   function nodeId(d) {
     return d.data.id;
   }
-  function x(d) {
-    return d.data.x0 = d.y;
-  }
-  function y(d) {
-    return d.data.y0 = d.x;
-  }
+//   function x(d) {
+//     return d.data.x0 = d.y;
+//   }
+//   function y(d) {
+//     return d.data.y0 = d.x;
+//   }
 }
 
 

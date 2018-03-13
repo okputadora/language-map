@@ -1,27 +1,15 @@
-<!-- <script
-  src="http://code.jquery.com/jquery-2.2.4.min.js"
-  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
-  crossorigin="anonymous">
-</script>
-
-
-<body>
-  <svg width='960' height='2000'>
-
-  </svg>
-</body>
-
-
-<script src="/javascripts/dataVis.js"></script> -->
-
 <!DOCTYPE html>
 <html>
     <head>
         <title>Etymology of {{word}}</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <style>
             svg {
                 border: solid 1px #ccc;
                 font: 15px sans-serif;
+                background-color: #f9f9f9
             }
             .link {
                 fill: none;
@@ -32,11 +20,15 @@
 
     </head>
     <body>
+      <div class='container-fluid'>
+        <div class='row text-center'>
+          <h1>Etymology of <span id="word">{{word}}</span></h1>
+          <div id="viz"></div>
+          <button class='btn btn-success' id="expand">Expand</button>
+        </div>
+        <a href='/'><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Pick another word</a>
+      </div>
 
-        <div>Etymology of <span id="word">{{word}}</span></div>
-        <div id="viz"></div>
-        <button id="expand">Expand</button>
-        <div id="relEntries">Related entries: </div>
     </body>
 </html>
 
