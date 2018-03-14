@@ -8,7 +8,6 @@ var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 var scrape = require('./routes/scrape');
-var map = require('./routes/map');
 var api = require('./routes/api');
 
 var dbUrl = 'mongodb://localhost/language_map'
@@ -38,7 +37,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/scrape', scrape);
-app.use('/map', map);
 app.use('/api', api);
 
 // catch 404 and forward to error handler
