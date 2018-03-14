@@ -1,5 +1,6 @@
 const Etymology = require('../Models/Etymology')
 const Scrape = require('../utils/scrape.js')
+const wordnet = require('wordnet')
 const Promise = require('bluebird')
 // important that languages contained in the names of other languages come after
 // // i.e.french comes after old french -- this is because...
@@ -45,13 +46,17 @@ module.exports = {
           cousins: parsedResult.cousins,
           relatedEntries: result.relatedEntries
         }
-        console.log("parsed result "+ parsedResult)
-        Etymology.create(etymology, function(err, etymologyFromDb){
-          if(err){
-            reject(err)
-            return
-          }
-          resolve(etymologyFromDb)
+        wordnet.lookup(word, function(err, definitions){
+          definition = definitions[0].glossary
+          etymology.origins.unshift({language: 'english', word: word, definition: definition})
+          console.log("parsed result "+ parsedResult)
+          Etymology.create(etymology, function(err, etymologyFromDb){
+            if(err){
+              reject(err)
+              return
+            }
+            resolve(etymologyFromDb)
+          })
         })
       })
       .catch(function(err){

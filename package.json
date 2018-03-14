@@ -22,7 +22,8 @@
     "react-dom": "^16.2.0",
     "serve-favicon": "~2.4.5",
     "string-similarity": "^1.2.0",
-    "superagent": "^3.8.2"
+    "superagent": "^3.8.2",
+    "wordnet": "^0.1.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
