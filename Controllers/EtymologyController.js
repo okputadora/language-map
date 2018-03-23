@@ -71,8 +71,6 @@ function parseEtymology(unparsed){
   word = unparsed.word
   // returns array of origin objects
   var origins = findOrigins(text)
-  origins.unshift({language: 'english', word: word, definition:'coming soon'})
-  console.log(origins)
   var cousins = findCousins(text)
   // if we couldn't produce a tree structure from the text
   if (origins.length == 0) {

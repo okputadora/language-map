@@ -1,5 +1,5 @@
 var express = require('express')
-var etymologyController = require('../controllers/etymologyController')
+var etymologyController = require('../controllers/EtymologyController')
 var router = express.Router()
 
 router.get('/', function(req, res, next){
