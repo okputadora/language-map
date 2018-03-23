@@ -1,12 +1,12 @@
 const express = require('express');
+var EtymologyController = require('../Controllers/EtymologyController')
 const router = express.Router();
-var etymologyController = require('../controllers/EtymologyController')
 
 router.post("/", function(req, res, next){
   var word = req.body.word
   // grab the text from the web
   // console.log(word)
-  etymologyController.post(word)
+  EtymologyController.post(word)
   .then(function(etymology){
     res.json({
       confirmation: "success",

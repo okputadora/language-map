@@ -10,13 +10,13 @@ var index = require('./routes/index');
 var scrape = require('./routes/scrape');
 var api = require('./routes/api');
 
-// var dbUrl = 'mongodb://localhost/language_map'
-mongoose.connect(process.env.MONGODB_URI, function(err, res){
+var dbUrl = 'mongodb://localhost/language_map'
+mongoose.connect(dbUrl, function(err, res){
   if(err){
-    console.log('DB connection failed' + process.env.MONGODB_URI)
+    console.log('DB connection failed' + dbUrl)
   }
   else{
-    console.log('DB connection successfull ' + process.env.MONGODB_URI)
+    console.log('DB connection successfull ' + dbUrl)
   }
 })
 

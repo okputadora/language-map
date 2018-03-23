@@ -1,5 +1,5 @@
 var express = require('express')
-var etymologyController = require('../controllers/EtymologyController')
+var EtymologyController = require('../Controllers/EtymologyController')
 var router = express.Router()
 
 router.get('/', function(req, res, next){
@@ -12,10 +12,8 @@ router.get('/', function(req, res, next){
 		})
     return
 	}
-	// the false parameter here indicated that we dont want the raw response
-	//  we want the password to be hidden. req.query gets paramaters for a GET Request
-	// req.body is for POST request
-	etymologyController.get(word)
+
+	EtymologyController.get(word)
 	.then(function(results){
     console.log(results.origins)
 		res.json({
