@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-var etymologyController = require('../controllers/etymologyController')
+var etymologyController = require('../controllers/EtymologyController')
 
 router.post("/", function(req, res, next){
   var word = req.body.word
