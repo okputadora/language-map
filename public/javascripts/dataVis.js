@@ -6,6 +6,7 @@ $(document).ready(function(){
     url: "/api",
     data: {word: word},
     success: function(response){
+      console.log(response)
       data = response.result.origins.reverse()
       data.forEach(function(elem, i){
         elem.id = "ohai" + (1000 + i)
